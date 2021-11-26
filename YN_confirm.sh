@@ -4,18 +4,17 @@
 # example: YN_confirm 'Do somethhing harmless?' Y # will exit-stat 0, exept when user speciy [nN]*
 # example: YN_confirm 'Do somethhing recomended?' y # will exit-stat 0 exept when user gives .....???????
 # example: YN_confirm 'Do somethhing recomended?' Yes # will exit-stat 5 exept when ?????....
-YN_confirm() { 
-
-	#set -- "${1:-}" "${2:-}"
-	# when the shell has set -u -> ${foo:-}
+YN_confirm() {
 
 	local yn_prompt;yn_prompt='[y/n]'
-	case ${2:-} in
+	case ${2-} in
 		[Yy]|[Yy]es) yn_prompt='[Y/n]';;
 		[Nn]|[Nn]o) yn_prompt='[y/N]';;
+		'') ;;
+		*) printf %s\n >&2 "YN_confirm: ignoring bad argument '$2'";;
 	esac
 
-	printf %s "${1:-}${1:+ }$yn_prompt "
+	printf %s "${1-}${1:+ }$yn_prompt "
 
 	local respond;respond=''
 	read respond </dev/tty || {
@@ -48,14 +47,13 @@ YN_confirm() {
 }
 
 case "${0##*/}" in
-	YN[-_]confirm) YN_confirm "$@";;
-	*) alias YN-confirm=YN_confirm;;
+	YN_confirm|YN_confirm) YN_confirm "$@";;
+	*) ;;
 esac
 
 
 
 #
-#return 123
 #""" # bat -r23:38 /usr/share/yash/initialization/common
 #  23   │   history()
 #  24   │   if [ -t 0 ] && (
@@ -73,4 +71,5 @@ esac
 #  36   │       ([Yy]*) command history "$@";;
 #  37   │       (*)     printf 'history: cancelled.\n' >&2;;
 #  38   │     esac
+#
 
