@@ -47,7 +47,7 @@ YN_confirm() {
 }
 
 case "${0##*/}" in
-	YN_confirm|YN_confirm) YN_confirm "$@";;
+	YN_confirm|YN_confirm.sh) YN_confirm "$@";;
 	*) ;;
 esac
 
