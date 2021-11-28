@@ -11,7 +11,7 @@ YN_confirm() {
 		[Yy]|[Yy]es) yn_prompt='[Y/n]';;
 		[Nn]|[Nn]o) yn_prompt='[y/N]';;
 		'') ;;
-		*) printf %s\n >&2 "YN_confirm: ignoring bad argument '$2'";;
+		*) printf %s\\n >&2 "YN_confirm: ignoring bad argument '$2'";;
 	esac
 
 	printf %s "${1-}${1:+ }$yn_prompt "
