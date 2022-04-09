@@ -2,20 +2,20 @@
 
 
 YN_confirm() {
-
 	case ${1-} in
 	--help|--help-long)
+		local help_long
 		case $1 in
 			--help-long) help_long='';;
 			*) unset help_long;;
 		esac
 		printf %s\\n \
-			"Usage: YN_confirm [-x|+x] [--stdin] [--print-response] [default] [...prompt text]" \
+			"Usage: YN_confirm [-x|+x] [--stdin|-S] [--print-response] [default] [...prompt text]" \
 			"" \
 			"Options:" \
 			"  --help            display ${help_long-"this "}help message" \
 			"  --help-long       display ${help_long+"this "}long help message with argument examples" \
-			"  --stdin           read response from standard input" \
+			"  --stdin|-S        read response from standard input" \
 			"  --print-response  print response after succsesful read" \
 			"  -x|+x             debug, turn on/off xtrace on shell" \
 			"" \
@@ -71,15 +71,15 @@ YN_confirm() {
 			`: " 130    Interrupted with CTRL-C or ESC" ` \
 			} \
 		;
-		exit
+		return
 	esac
 
-	io_file=/dev/tty
-	unset print_response
+	local io_file;io_file=/dev/tty
+	local print_response
 	while case $# in 0) false;; *) ;;esac; do
 		case $1 in
 			--print-response) print_response='';;
-			--stdin) unset io_file;;
+			--stdin|-S) unset io_file;;
 			[+-]x) set "$1";;
 			-*) printf %s\\n "YN_confirm: unrecognized option: '$1'" >&2; return 4;;
 			*) break;;
@@ -88,7 +88,7 @@ YN_confirm() {
 	done
 
 
-	default=${1-}
+	local default;default=${1-}
 	${1+shift}
 
 	local yn_prompt;yn_prompt='[y/n]'
@@ -96,10 +96,9 @@ YN_confirm() {
 		[Yy]|[Yy]es|YES) yn_prompt='[Y/n]';;
 		[Nn]|[Nn]o|NO)   yn_prompt='[y/N]';;
 		''|[Mm]aybe) ;;
-		*) printf %s\\n >&2 "YN_confirm: warning, bad [default] argument '$default'"; return 4;;
+		*) printf %s\\n >&2 "YN_confirm: bad [default] argument '$default'"; return 4;;
 	esac
-
-IFS=${NEW_LINE-'
+	local IFS;IFS=${NEW_LINE-'
 '}
 	case ${io_file+x} in
 		x) printf %s "${*-}${@:+ }$yn_prompt " >"$io_file";;
@@ -107,7 +106,7 @@ IFS=${NEW_LINE-'
 	esac
 
 	# todo: integrate this exit status
-	unset response
+	local response
 	case ${io_file+x} in
 		x) read response <"$io_file";;
 		*) read response;;
