@@ -6,21 +6,40 @@ See [YN_confirm help message below](#help-message)
 
 ## How to use:
 ``` shell
-$ if YN_confirm y 'My question?'; then echo ok; else echo exit code: $?; fi
-My question? [Y/n]
-(( when user accepts by typing: "yes"))
+$ if YN_confirm y 'My question?'
+  then echo ok
+  else exit code: $?
+  fi
+My question? [Y/n] 
+(( when user accepts by typing: "yes"|"yNO"|Ynot|[Yy]* )): ok
+(( when user rejects by typing: "no"|"nYES"|"Nu"|[Nn]* )): exit code: 3
+(( when user stypes not valid input: "idk" )): exit code: 3
+(( when cant reed input )): exit code: 5
+
+
+$ if YN_confirm Yes 'Do you want to clear cache?'
+  then echo will delete something un-needed from ~/.cache/...
+  else echo exit code $?
+  fi
+Do you want to clear cache? [Y/n] 
+(( when user types: "idk"|"" )): will delete something un-needed from ~/.cache/...
+(( when can't read input )): will delete something un-needed from ~/.cache/...
+(( and only when user types: "n"|[Nn]* )): exit code: 1
+
+$ if YN_confirm n 'Do you want to delete something? you may need it'
+  then echo will delete something
+  else echo exit code $?
+  fi
+Do you want to delete something? you may need it [y/N] 
+(( when user types: ""|"no"|[Nn]* )): exit code: 1
+(( when user types: "idk" )): exit code: 3
+(( when can't read input )): exit code: 5
+(( only when user types: "yes"|[Yy]* )): will delete something
 ```
-accpeting is when answer is in `y*|n*` and (when $1='y' and no answer/\[Enter\])
 
-``` shell
-$ if YN_confirm Yes 'Do you want to clear cache?'; then echo will delete something un-needed from ~/.cache/...; else echo exit code $?; fi
-Do you want to clear cache? [Y/n]
-(( When user types: "idk" )): will delete something un-needed from ~/.cache/...
-(( When user types: "nOo" )): exit code: 1
+<!-- todo: consider adding usage for "maybe" option -->
 
-$ if YN_confirm y 'Do you want to clear cache?'; then echo will delete something un-needed from ~/.cache/...; else echo exit code $?; fi
-
-```
+note: exit code 4 is for error in arguments
 
 
 ## Help message:
@@ -68,7 +87,7 @@ $ if YN_confirm y 'Do you want to clear cache?'; then echo will delete something
           (2+ chars)  => exit code 0
     
           1. when `read` failed and [default] in [Yy]es    => exit code 0
-          2. when `read` failed and [default] in [Nn]o     => exit code 0 (counterintuitive?)
+          2. when `read` failed and [default] in [Nn]o     => exit code 0
           3. when `read` failed and [default] in [Mm]aybe  => exit code 0
           4. when `read` failed and [default] in ''        => exit code 5
           5. when `read` failed and [default] in [Yy]      => exit code 5
@@ -80,7 +99,7 @@ $ if YN_confirm y 'Do you want to clear cache?'; then echo will delete something
           (lower)|'' => exit code 3
     
           1. when $response not in [YyNn]*|'' and [default] in Y|Yes      => exit code 0
-          2. when $response not in [YyNn]*|'' and [default] in N|No       => exit code 0 (counterintuitive?)
+          2. when $response not in [YyNn]*|'' and [default] in N|No       => exit code 0
           3. when $response not in [YyNn]*|'' and [default] in Maybe      => exit code 0
           4. when $response not in [YyNn]*|'' and [default] in ''|maybe   => exit code 3
           5. when $response not in [YyNn]*|'' and [default] in y|yes      => exit code 3
