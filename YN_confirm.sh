@@ -5,9 +5,11 @@ YN_confirm() {
 
 local io_file; io_file=${YN_CONFIRM_TTY_PATH:-/dev/tty};
 
-local print_response
+local arg_printf print_response
+unset arg_printf print_response
 while case $# in 0) false;; *) ;;esac; do
 	case $1 in
+		--printf) arg_printf='';;
 		--print-response) print_response='';;
 		--stdin|-S)
 			case ${YN_CONFIRM_TTY_PATH+x} in
@@ -36,10 +38,13 @@ esac
 local IFS;IFS=${NEW_LINE-'
 '}
 
+case ${arg_printf-0} in 0) set -- %s "${*-}"; esac
+
 case ${io_file:-"-"} in
-	-) printf %s "${*-}${@:+ }$yn_prompt " >&2;;
-	*) printf %s "${*-}${@:+ }$yn_prompt " >"$io_file";;
+	-) { printf "$@"; printf %s "${1:+ }$yn_prompt "; } >&2;;
+	*) { printf "$@"; printf %s "${1:+ }$yn_prompt "; } >"$io_file";;
 esac
+	# eval '{ printf "$@"; printf %s "${1:+ }$yn_prompt "; } >${io_file-"&2"}${io_file+\$io_file};;'
 
 # todo: integrate this exit status
 local response
@@ -104,6 +109,7 @@ case ${1-} in --help|--help-long)
 		"  --help            display ${help_long-"this "}help message" \
 		"  --help-long       display ${help_long+"this "}long help message with argument examples" \
 		"  --stdin|-S        read response from standard input" \
+		"  --printf          pass [...prompt text] to printf. note: will append \$yn_prompt=' [y/n] ' to last argument" \
 		"  --print-response  print response after succsesful read" \
 		"  -x|+x             debug, turn on/off xtrace on shell" \
 		"" \
