@@ -74,7 +74,15 @@ YN_confirm() {
 		exit
 	esac
 
-	io_file=/dev/tty
+	if [ -w "/dev/tty" ]; then
+		io_file=/dev/tty
+	else
+		# busybox-win32 does not have /dev/tty, but custom `tty` command could return "CON"
+		# dont detect if can write to the file, CON file does not exist (`test -e CON -a -w CON` will fail)
+		# but read/write to it is the same as read/write to /dev/tty on Linux OS
+		io_file=$(tty) || return
+	fi
+
 	unset print_response
 	while case $# in 0) false;; *) ;;esac; do
 		case $1 in
