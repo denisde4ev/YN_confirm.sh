@@ -57,7 +57,7 @@ YN_confirm() {
 			"    III. [y/n/''] matters, Examples for empty input:" \
 			"      1. when \response in '' and [default] in [Yy]|[Yy]es  => exit code 0" \
 			"      2. when \response in '' and [default] in [Nn]|[Nn]o   => exit code 1" \
-			"      4. when \response in '' and [default] in ''|[Mm]aybe  => exit code 2" \
+			"      3. when \response in '' and [default] in ''|[Mm]aybe  => exit code 2" \
 			} \
 			${help_long+ \
 			"" \
