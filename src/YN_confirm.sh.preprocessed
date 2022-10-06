@@ -1,9 +1,22 @@
 #!/bin/sh
 
+!! case ${BUILD_YN_CONFIRM_NOBUILDWARNING} in '') echo IyBUaGlzIGZpbGUgaXMgZ2VuZXJhdGVkIGJ5IHBwLiBkbyBub3QgZWRpdC4KIyBzb3VyY2UgaXMgYW52YWxpYmxlIGF0OiAuL3NyYy9ZTl9jb25maXJtLnNo | base64 -d; esac # built file warning
 
 YN_confirm() {
 
-local io_file; io_file=${YN_CONFIRM_TTY_PATH:-/dev/tty};
+local io_file
+
+case ${YN_CONFIRM_TTY_PATH+x} in
+	x) io_file=$YN_CONFIRM_TTY_PATH;;
+	*)
+		io_file=/dev/tty;
+		[ -w "${io_fil}" ] || {
+			# busybox-w32 does not have /dev/tty, but custom `tty` command could return "CON"
+			# dont detect if can write to the file, CON file does not exist (`test -e CON -a -w CON` will fail)
+			# but read/write to it is the same as read/write to /dev/tty on Linux OS
+			io_file=$(tty) || return
+	}
+esac
 
 local arg_printf print_response
 unset arg_printf print_response
@@ -13,7 +26,7 @@ while case $# in 0) false;; *) ;;esac; do
 		--print-response) print_response='';;
 		--stdin|-S)
 			case ${YN_CONFIRM_TTY_PATH+x} in
-				x) printf %s\\n >&2 "${FUNCNAME:-YN_confirm}: Isnoring -S option because YN_CONFIRM_TTY_PATH var is in the env.";;
+				x) printf %s\\n >&2 "${FUNCNAME:-YN_confirm}: Ignoring -S option because YN_CONFIRM_TTY_PATH var is in the env.";;
 				*) unset io_file
 			esac
 		;;

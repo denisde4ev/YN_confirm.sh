@@ -1,5 +1,5 @@
 case ${1-} in --help|--help-long)
-	#local help_long
+	local help_long
 	case $1 in
 		--help-long) help_long='';;
 		*) unset help_long;;
@@ -28,7 +28,7 @@ case ${1-} in --help|--help-long)
 		${help_long+ \
 		"" \
 		"      1. when \`read\` failed and [default] in [Yy]es    => exit code 0" \
-		"      2. when \`read\` failed and [default] in [Nn]o     => exit code 0" \
+		"      2. when \`read\` failed and [default] in [Nn]o     => exit code 0 (counterintuitive?)" \
 		"      3. when \`read\` failed and [default] in [Mm]aybe  => exit code 0" \
 		"      4. when \`read\` failed and [default] in ''        => exit code 5" \
 		"      5. when \`read\` failed and [default] in [Yy]      => exit code 5" \
@@ -42,7 +42,7 @@ case ${1-} in --help|--help-long)
 		${help_long+ \
 		"" \
 		"      1. when \$response not in [YyNn]*|'' and [default] in Y|Yes      => exit code 0" \
-		"      2. when \$response not in [YyNn]*|'' and [default] in N|No       => exit code 0" \
+		"      2. when \$response not in [YyNn]*|'' and [default] in N|No       => exit code 0 (counterintuitive?)" \
 		"      3. when \$response not in [YyNn]*|'' and [default] in Maybe      => exit code 0" \
 		"      4. when \$response not in [YyNn]*|'' and [default] in ''|maybe   => exit code 3" \
 		"      5. when \$response not in [YyNn]*|'' and [default] in y|yes      => exit code 3" \
@@ -53,7 +53,7 @@ case ${1-} in --help|--help-long)
 		"    III. [y/n/''] matters, Examples for empty input:" \
 		"      1. when \response in '' and [default] in [Yy]|[Yy]es  => exit code 0" \
 		"      2. when \response in '' and [default] in [Nn]|[Nn]o   => exit code 1" \
-		"      4. when \response in '' and [default] in ''|[Mm]aybe  => exit code 2" \
+		"      3. when \response in '' and [default] in ''|[Mm]aybe  => exit code 2" \
 		} \
 		${help_long+ \
 		"" \
