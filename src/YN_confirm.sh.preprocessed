@@ -1,6 +1,6 @@
 #!/bin/sh
 
-!! case ${BUILD_YN_CONFIRM_NOBUILDWARNING} in '') echo IyBUaGlzIGZpbGUgaXMgZ2VuZXJhdGVkIGJ5IHBwLiBkbyBub3QgZWRpdC4KIyBzb3VyY2UgaXMgYW52YWxpYmxlIGF0OiAuL3NyYy9ZTl9jb25maXJtLnNo | base64 -d; esac
+!! case ${BUILD_YN_CONFIRM_NOBUILDWARNING} in '') echo IyBUaGlzIGZpbGUgaXMgZ2VuZXJhdGVkIGJ5IHBwLiBkbyBub3QgZWRpdC4KIyBzb3VyY2UgaXMgYW52YWxpYmxlIGF0OiAuL3NyYy9ZTl9jb25maXJtLnNo | base64 -d; esac # built file warning
 
 YN_confirm() {
 
